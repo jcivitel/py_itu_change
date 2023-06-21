@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 
 import requests
@@ -24,6 +25,9 @@ soup = BeautifulSoup(response.text, "html.parser")
 # Das Dropdown-Menü finden
 dropdown = soup.find("select", {"id": "ctl00_ContentPlaceHolder1_ctl01_lstCountryPrefix"})
 
+# Liste für CSV export
+data_list = [["Land", "Datum"]]
+
 # Alle Optionen im Dropdown-Menü durchgehen und den Link für jeden Wert öffnen
 for option in dropdown.find_all("option"):
     value = option["value"]
@@ -41,14 +45,27 @@ for option in dropdown.find_all("option"):
         posted_date = soup.find_all("b")
         country = soup.find("title")
 
-        if check_date_format(posted_date[8].text.strip()):
-            date = posted_date[8].text.strip()
-        elif check_date_format(posted_date[9].text.strip()):
-            date = posted_date[9].text.strip()
-        elif check_date_format(posted_date[10].text.strip()):
-            date = posted_date[10].text.strip()
+        try:
+            if check_date_format(posted_date[8].text.strip()):
+                update_date = posted_date[8].text.strip()
+            elif check_date_format(posted_date[9].text.strip()):
+                update_date = posted_date[9].text.strip()
+            elif check_date_format(posted_date[10].text.strip()):
+                update_date = posted_date[10].text.strip()
+        except:
+            continue
 
         if posted_date:
-            print(f"Land: {country.text.strip()}")
-            print(f"Posted Datum: {date}")
-            print("---")
+            print(f"Land: {country.text.strip()}, {update_date}")
+            data_list.append([country.text.strip(), update_date])
+
+today = datetime.today()
+
+# Open the CSV file in write mode
+with open(f"ITU-Change-{today.strftime('%Y_%m_%d')}.csv", 'w', newline='') as csvfile:
+    # Create a CSV writer object
+    writer = csv.writer(csvfile)
+
+    # Write the data to the CSV file row by row
+    for row in data_list:
+        writer.writerow(row)

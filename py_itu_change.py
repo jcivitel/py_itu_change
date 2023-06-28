@@ -26,7 +26,7 @@ soup = BeautifulSoup(response.text, "html.parser")
 dropdown = soup.find("select", {"id": "ctl00_ContentPlaceHolder1_ctl01_lstCountryPrefix"})
 
 # Liste für CSV export
-data_list = [["Land", "Datum"]]
+data_list = [["Land", "Datum", "Link"]]
 
 # Alle Optionen im Dropdown-Menü durchgehen und den Link für jeden Wert öffnen
 for option in dropdown.find_all("option"):
@@ -57,7 +57,9 @@ for option in dropdown.find_all("option"):
 
         if posted_date:
             print(f"Land: {country.text.strip()}, {update_date}")
-            data_list.append([country.text.strip(), update_date])
+            # Filter Dates
+            if update_date > "2023-01-01":
+                data_list.append([country.text.strip(), update_date, link])
 
 today = datetime.today()
 

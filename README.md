@@ -1,29 +1,18 @@
-# README #
+### What is the goal of the project? ###
 
-This README would normally document whatever steps are necessary to get your application up and running.
+The goal is to have a list to automatically receive and retrieve the changes of the updates on the ITU page for the number ranges of all countries.
 
-### What is this repository for? ###
+### How to install the project? ###
+* first clone the repo to a local directory.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* open a CMD and execute the following command in the directory:
+`python -m venv venv`
 
-### How do I get set up? ###
+* After that execute this in a Python console:
+\
+`./venv/bin/activate`
+\
+`pip install -r reqirements.txt`
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* after installing the required packages run the script:
+`py_itu_change.py`

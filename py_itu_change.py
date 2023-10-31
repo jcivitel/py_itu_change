@@ -1,8 +1,9 @@
-import csv
+import sys
 from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
+from tabulate import tabulate
 
 
 def check_date_format(date_string):
@@ -12,6 +13,10 @@ def check_date_format(date_string):
     except ValueError:
         return False
 
+
+if len(sys.argv) <= 1:
+    print("Please add the filter-date as param")
+    quit()
 
 url = "https://www.itu.int/oth/T0202.aspx?lang=en&parent=T0202"
 
@@ -48,16 +53,12 @@ for option in dropdown.find_all("option"):
         if posted_date:
             print(f"Country: {country.text.strip()}, {update_date}")
             # Filter Dates
-            if update_date > "2023-07-01":
+            if update_date > sys.argv[1]:
                 country_updated += 1
                 data_list.append([country.text.strip(), update_date, link])
 
 today = datetime.today()
-
-with open(f"ITU-Change-{today.strftime('%Y_%m_%d')}.csv", 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-
-    for row in data_list:
-        writer.writerow(row)
+if len(data_list) >= 2:
+    print(tabulate(data_list))
 
 print(f"{country_updated} have new updates")

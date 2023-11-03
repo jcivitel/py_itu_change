@@ -16,7 +16,7 @@ def check_date_format(date_string):
 
 if len(sys.argv) <= 1:
     print("Please add the filter-date as param")
-    quit()
+    quit(1)
 
 url = "https://www.itu.int/oth/T0202.aspx?lang=en&parent=T0202"
 

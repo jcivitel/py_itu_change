@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('Initialize') {
             steps {
-		    cleanWs()
 		    dir('project') {
 			    checkout scm
 		    }

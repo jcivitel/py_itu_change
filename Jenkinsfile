@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+    	string(name: 'ITU_DATE', defaultValue: '2023-01-01')
+    }
     stages {
         stage('Initialize') {
             steps {
@@ -31,7 +34,7 @@ pipeline {
 			sh '''
     			cd project
        			. venv/bin/activate
-        		python3 py_itu_change.py $ITU_DATE
+        		python3 py_itu_change.py ${params.ITU_DATE}
 			'''
 		}
 	}

@@ -1,3 +1,4 @@
+import os
 import sys
 from datetime import datetime
 
@@ -51,7 +52,7 @@ for option in dropdown.find_all("option"):
                 continue
 
         if posted_date:
-            print(f"Country: {country.text.strip()}, {update_date}")
+            print(f"Country: {country.text.strip()}, {update_date}", flush=True)
             # Filter Dates
             if update_date > sys.argv[1]:
                 country_updated += 1

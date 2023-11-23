@@ -4,7 +4,7 @@ pipeline {
         currentDate = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim()
     }
     parameters {
-	    string defaultValue: ${currentDate}, name: 'ITU_DATE', trim: true
+	    string defaultValue: "${currentDate}", name: 'ITU_DATE', trim: true
     }
     stages {
 	stage('Python Enviroment'){

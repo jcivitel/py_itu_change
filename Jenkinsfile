@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-	    string defaultValue: '2023-01-01', name: 'ITU_DATE', trim: true
+	    string defaultValue: '2023-11-01', name: 'ITU_DATE', trim: true
     }
     stages {
 	stage('Python Enviroment'){

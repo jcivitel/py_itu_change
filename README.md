@@ -11,6 +11,7 @@ Each country has different number ranges and numbers formats. This ranges from d
 
 The goal is to have a list to automatically receive and retrieve the changes of the updates on the <a href="https://www.itu.int/oth/T0202.aspx?lang=en">ITU page</a> for the number ranges of all countries.
 
+<br>
 
 ## How to install the project?
 1. Begin by cloning the repository to a designated local directory on your machine.
@@ -32,6 +33,7 @@ py_itu_change.py <date>
 > [!NOTE]
 > Note that you must replace `<date>` with the date (`YYYY-MM-DD`) from which you want to filter. All updates to the publications after this date will be taken into account.**
 
+<br>
 
 ## Example
 ```python

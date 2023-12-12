@@ -27,7 +27,7 @@ soup = BeautifulSoup(response.text, "html.parser")
 
 dropdown = soup.find("select", {"id": "ctl00_ContentPlaceHolder1_ctl01_lstCountryPrefix"})
 
-data_list = [["Country", "Date", "Link"]]
+data_list = []
 
 country_updated = 0
 
@@ -60,6 +60,6 @@ for option in dropdown.find_all("option"):
 
 today = datetime.today()
 if len(data_list) >= 2:
-    print(tabulate(data_list))
+    print(tabulate(data_list, headers=["Country", "Date", "Link"], tablefmt="github"))
 
-print(f"{country_updated} have new updates")
+print(f"{country_updated} countries have new updates")

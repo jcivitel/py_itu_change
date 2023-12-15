@@ -27,7 +27,7 @@ python -m venv venv
 ```python
 . venv/bin/activate
 pip install -r reqirements.txt
-py_itu_change.py <date>
+python3 py_itu_change.py <date>
 ```
 
 > [!NOTE]

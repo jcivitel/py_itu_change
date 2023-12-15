@@ -25,7 +25,7 @@ python -m venv venv
 
 3. Once the virtual Python environment has been successfully created, it is now possible to execute the script by the following steps:
 ```python
-./venv/bin/activate
+. venv/bin/activate
 pip install -r reqirements.txt
 py_itu_change.py <date>
 ```
@@ -37,7 +37,7 @@ py_itu_change.py <date>
 
 ## Example
 ```python
-$ python3 py_itu_change.py 2023-10-01
+python3 py_itu_change.py 2023-10-01
 ```
 
 ### Output:

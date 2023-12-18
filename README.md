@@ -31,7 +31,7 @@ python3 py_itu_change.py <date>
 ```
 
 > [!NOTE]
-> Note that you must replace `<date>` with the date (`YYYY-MM-DD`) from which you want to filter. All updates to the publications after this date will be taken into account.**
+> Note that you must replace `<date>` with the date (`YYYY-MM-DD`) from which you want to filter. All updates to the publications after this date will be taken into account.
 
 <br>
 

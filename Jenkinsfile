@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers{
+	    cron('H H 1,15 1-12 *')
+    }
     parameters {
 	    string defaultValue: '2023-11-01', name: 'ITU_DATE', trim: true
     }

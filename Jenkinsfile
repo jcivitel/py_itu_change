@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers{
+	    cron('H H 1,15 1-12 *')
+    }
     parameters {
 	    string defaultValue: '2023-11-01', name: 'ITU_DATE', trim: true
     }
@@ -16,7 +19,7 @@ pipeline {
 		steps {
 			sh """
 			. venv/bin/activate
-			pip install -r reqirements.txt
+			pip install -r requirements.txt
 			"""
 		}
 	}

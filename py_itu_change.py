@@ -60,6 +60,7 @@ for option in dropdown.find_all("option"):
 
 today = datetime.today()
 if len(data_list) >= 2:
+    print("\n\n")
     print(tabulate(data_list, headers=["Country", "Date", "Link"], tablefmt="github"))
 
-print(f"{country_updated} countries have new updates")
+print(f"\n{country_updated} countries have new updates")

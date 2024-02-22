@@ -24,9 +24,16 @@ python -m venv venv
 ```
 
 3. Once the virtual Python environment has been successfully created, it is now possible to execute the script by the following steps:
+#### Linux
 ```python
 . venv/bin/activate
-pip install -r reqirements.txt
+pip install -r requirements.txt
+python3 py_itu_change.py <date>
+```
+#### Windows
+```python
+./venv/Scripts/activate.bat
+pip install -r requirements.txt
 python3 py_itu_change.py <date>
 ```
 

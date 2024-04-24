@@ -72,4 +72,4 @@ Iran (Islamic Republic of)  2023-11-29  https://www.itu.int/oth/T0202000066/en
 <br>
 
 ## Contributors
-[![Contributors Display](https://badges.pufler.dev/contributors/jcivitel/garrysmod?size=50&padding=5&bots=false)](https://github.com/jcivitel/py_itu_change/graphs/contributors)
+[![Contributors Display](https://badges.pufler.dev/contributors/jcivitel/py_itu_change?size=50&padding=5&bots=false)](https://github.com/jcivitel/py_itu_change/graphs/contributors)

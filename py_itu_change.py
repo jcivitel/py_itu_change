@@ -1,8 +1,8 @@
-import os
+import asyncio
 import sys
 from datetime import datetime
 
-import requests
+import aiohttp
 from bs4 import BeautifulSoup
 from tabulate import tabulate
 
@@ -15,52 +15,69 @@ def check_date_format(date_string):
         return False
 
 
-if len(sys.argv) <= 1:
-    print("Please add the filter-date as param")
-    quit(1)
+async def fetch(session, url):
+    async with session.get(url) as response:
+        return await response.text()
 
-url = "https://www.itu.int/oth/T0202.aspx?lang=en&parent=T0202"
 
-response = requests.get(url)
+async def process_country(session, value, filter_date):
+    link = f"https://www.itu.int/oth/{value}/en"
+    html = await fetch(session, link)
+    soup = BeautifulSoup(html, "html.parser")
 
-soup = BeautifulSoup(response.text, "html.parser")
+    posted_date = soup.find_all("b")
+    country = soup.find("title")
 
-dropdown = soup.find("select", {"id": "ctl00_ContentPlaceHolder1_ctl01_lstCountryPrefix"})
+    update_date = None
+    for i in range(8, 11):
+        try:
+            if check_date_format(posted_date[i].text.strip()):
+                update_date = posted_date[i].text.strip()
+                break
+        except:
+            continue
 
-data_list = []
+    if update_date:
+        print(f"Country: {country.text.strip()}, {update_date}", flush=True)
+        if update_date > filter_date:
+            return [country.text.strip(), update_date, link]
+    return None
 
-country_updated = 0
 
-for option in dropdown.find_all("option"):
-    value = option["value"]
+async def main():
+    if len(sys.argv) <= 1:
+        print("Please add the filter-date as param")
+        return
 
-    if value:
-        link = f"https://www.itu.int/oth/{value}/en"
+    filter_date = sys.argv[1]
+    url = "https://www.itu.int/oth/T0202.aspx?lang=en&parent=T0202"
 
-        response = requests.get(link)
-        soup = BeautifulSoup(response.text, "html.parser")
+    async with aiohttp.ClientSession() as session:
+        html = await fetch(session, url)
+        soup = BeautifulSoup(html, "html.parser")
+        dropdown = soup.find(
+            "select", {"id": "ctl00_ContentPlaceHolder1_ctl01_lstCountryPrefix"}
+        )
 
-        posted_date = soup.find_all("b")
-        country = soup.find("title")
+        tasks = []
+        for option in dropdown.find_all("option"):
+            value = option.get("value")
+            if value:
+                tasks.append(process_country(session, value, filter_date))
 
-        for i in range(8, 11):
-            try:
-                if check_date_format(posted_date[i].text.strip()):
-                    update_date = posted_date[i].text.strip()
-                    break
-            except:
-                continue
+        results = await asyncio.gather(*tasks)
+        data_list = [result for result in results if result]
 
-        if posted_date:
-            print(f"Country: {country.text.strip()}, {update_date}", flush=True)
-            # Filter Dates
-            if update_date > sys.argv[1]:
-                country_updated += 1
-                data_list.append([country.text.strip(), update_date, link])
+    country_updated = len(data_list)
 
-today = datetime.today()
-if len(data_list) >= 2:
-    print("\n\n")
-    print(tabulate(data_list, headers=["Country", "Date", "Link"], tablefmt="github"))
+    if len(data_list) >= 2:
+        print("\n\n")
+        print(
+            tabulate(data_list, headers=["Country", "Date", "Link"], tablefmt="github")
+        )
 
-print(f"\n{country_updated} countries have new updates")
+    print(f"\n{country_updated} countries have new updates")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

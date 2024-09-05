@@ -67,6 +67,7 @@ async def main():
 
         results = await asyncio.gather(*tasks)
         data_list = [result for result in results if result]
+        data_list.sort(key=lambda x: x[1])
 
     country_updated = len(data_list)
 

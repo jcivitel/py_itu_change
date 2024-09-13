@@ -7,6 +7,22 @@ from bs4 import BeautifulSoup
 from tabulate import tabulate
 
 
+def progress_bar(iteration, total, length=50):
+    """
+    :description:
+    function to generate a progress bar
+    :param iteration:
+    :param total:
+    :param (optional) length:
+    """
+    percent = 100 * (iteration / float(total))
+    filled_length = int(length * iteration // total)
+    bar = "#" * filled_length + "-" * (length - filled_length)
+
+    sys.stdout.write(f"\rProgress: |{bar}| {percent:.2f}% ")
+    sys.stdout.flush()
+
+
 def check_date_format(date_string):
     try:
         datetime.strptime(date_string, "%Y-%m-%d")
@@ -21,6 +37,13 @@ async def fetch(session, url):
 
 
 async def process_country(session, value, filter_date):
+    """
+    function to process each country and get the latest update timestamp
+    :param session:
+    :param value:
+    :param filter_date:
+    :return: None
+    """
     link = f"https://www.itu.int/oth/{value}/en"
     html = await fetch(session, link)
     soup = BeautifulSoup(html, "html.parser")
@@ -38,13 +61,17 @@ async def process_country(session, value, filter_date):
             continue
 
     if update_date:
-        print(f"Country: {country.text.strip()}, {update_date}", flush=True)
         if update_date > filter_date:
             return [country.text.strip(), update_date, link]
     return None
 
 
 async def main():
+    """
+    :description: The Main function of the program
+    :param filter_date: the first argument should be the date in `YYYY-MM-DD` format
+    :return: True
+    """
     if len(sys.argv) <= 1:
         print("Please add the filter-date as param")
         return
@@ -65,12 +92,27 @@ async def main():
             if value:
                 tasks.append(process_country(session, value, filter_date))
 
-        results = await asyncio.gather(*tasks)
+        total_tasks = len(tasks)
+        completed_tasks = 0
+
+        progress_bar(completed_tasks, total_tasks)
+
+        results = []
+        for task in asyncio.as_completed(tasks):
+            result = await task
+            if result:
+                results.append(result)
+                sys.stdout.write(f"\rCountry: {result[0]}, Update Date: {result[1]}\n")
+
+            completed_tasks += 1
+            progress_bar(completed_tasks, total_tasks)
+
         data_list = [result for result in results if result]
         data_list.sort(key=lambda x: x[1])
 
     country_updated = len(data_list)
-
+    sys.stdout.write("\n")
+    """print the result list"""
     if len(data_list) >= 2:
         print("\n\n")
         print(
@@ -80,5 +122,8 @@ async def main():
     print(f"\n{country_updated} countries have new updates")
 
 
+"""
+check if to call the main function
+"""
 if __name__ == "__main__":
     asyncio.run(main())

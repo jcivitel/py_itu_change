@@ -49,6 +49,21 @@ python3 py_itu_change.py 2023-10-01
 
 ### Output:
 ```python
+Country: Bahrain, Update Date: 2024-01-31
+Country: Solomon Islands, Update Date: 2024-04-26
+Country: Iridium, Update Date: 2023-09-01
+Country: Qatar, Update Date: 2023-05-12
+Country: Thailand, Update Date: 2024-06-28
+Country: Saint Pierre and Miquelon, Update Date: 2024-08-30
+Country: Gabon, Update Date: 2024-03-28
+Country: Iran (Islamic Republic of), Update Date: 2024-03-28
+Country: Morocco, Update Date: 2024-03-13
+Country: Burundi, Update Date: 2023-11-29
+Country: Slovakia, Update Date: 2023-07-11
+Country: Netherlands, Update Date: 2024-07-09
+Country: Seychelles, Update Date: 2024-07-12
+Progress: |############--------------------------------------| 24.90%
+
 --------------------------  ----------  --------------------------------------
 Country                     Date        Link
 --------------------------  ----------  --------------------------------------

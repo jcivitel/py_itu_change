@@ -10,12 +10,12 @@ charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
 frozenlist==1.4.1
-idna==3.8
+idna==3.10
 multidict==6.1.0
 mypy-extensions==1.0.0
 packaging==24.1
 pathspec==0.12.1
-platformdirs==4.3.2
+platformdirs==4.3.3
 requests==2.32.3
 soupsieve==2.6
 tabulate==0.9.0

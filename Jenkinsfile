@@ -4,7 +4,7 @@ pipeline {
 	    cron('H H 1,15 1-12 *')
     }
     parameters {
-	    string defaultValue: '2023-11-01', name: 'ITU_DATE', trim: true
+	    string defaultValue: '2024-09-26', name: 'ITU_DATE', trim: true
     }
     stages {
 	stage('Python Enviroment'){

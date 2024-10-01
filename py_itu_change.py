@@ -19,7 +19,7 @@ def progress_bar(iteration, total, length=50):
     filled_length = int(length * iteration // total)
     bar = "#" * filled_length + "-" * (length - filled_length)
 
-    sys.stdout.write(f"\rProgress: |{bar}| {percent:.2f}% ")
+    sys.stdout.write(f"\rProgress: |\033[92m{bar}\033[0m| {percent:.2f}%")
     sys.stdout.flush()
 
 
@@ -119,7 +119,7 @@ async def main():
             tabulate(data_list, headers=["Country", "Date", "Link"], tablefmt="github")
         )
 
-    print(f"\n{country_updated} countries have new updates")
+    print(f"\n\033[93m{country_updated} countries have new updates")
 
 
 """

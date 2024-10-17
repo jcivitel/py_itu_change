@@ -16,11 +16,12 @@ def progress_bar(iteration, total):
     :param total:
     """
 
-    # Get terminal width dynamically
-    terminal_width = os.get_terminal_size().columns
-    # Reserve some space for text (e.g., 'Progress: | ... | 100.00%')
-    reserved_space = 20
-    length = terminal_width - reserved_space
+    try:
+        terminal_width = os.get_terminal_size().columns
+        reserved_space = 20
+        length = terminal_width - reserved_space
+    except:
+        length = 50
 
     percent = 100 * (iteration / float(total))
     filled_length = int(length * iteration // total)

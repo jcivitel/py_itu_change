@@ -1,4 +1,5 @@
 import asyncio
+import os
 import sys
 from datetime import datetime
 
@@ -7,14 +8,20 @@ from bs4 import BeautifulSoup
 from tabulate import tabulate
 
 
-def progress_bar(iteration, total, length=50):
+def progress_bar(iteration, total):
     """
     :description:
     function to generate a progress bar
     :param iteration:
     :param total:
-    :param (optional) length:
     """
+
+    # Get terminal width dynamically
+    terminal_width = os.get_terminal_size().columns
+    # Reserve some space for text (e.g., 'Progress: | ... | 100.00%')
+    reserved_space = 20
+    length = terminal_width - reserved_space
+
     percent = 100 * (iteration / float(total))
     filled_length = int(length * iteration // total)
     bar = "#" * filled_length + "-" * (length - filled_length)
@@ -102,7 +109,7 @@ async def main():
             result = await task
             if result:
                 results.append(result)
-                sys.stdout.write(f"\rCountry: {result[0]}, Update Date: {result[1]}\n")
+                print(f"\33[2K\rCountry: {result[0]}, Update Date: {result[1]}")
 
             completed_tasks += 1
             progress_bar(completed_tasks, total_tasks)

@@ -1,4 +1,4 @@
-[![](https://img.shields.io/maintenance/yes/2024)](https://github.com/jcivitel/)
+[![](https://img.shields.io/maintenance/yes/2025)](https://github.com/jcivitel/)
 [![GitHub issues](https://img.shields.io/github/issues/jcivitel/py_itu_change)](https://github.com/jcivitel/py_itu_change)
 [![GitHub Repo stars](https://img.shields.io/github/stars/jcivitel/py_itu_change)](https://github.com/jcivitel/py_itu_change)
 [![GitHub License](https://img.shields.io/github/license/jcivitel/py_itu_change)](https://github.com/jcivitel/py_itu_change)

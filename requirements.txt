@@ -13,7 +13,7 @@ frozenlist==1.6.0
 idna==3.10
 multidict==6.4.3
 mypy-extensions==1.0.0
-packaging==24.2
+packaging==25.0
 pathspec==0.12.1
 platformdirs==4.3.7
 requests==2.32.3

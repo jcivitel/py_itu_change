@@ -11,7 +11,7 @@ click==8.1.8
 colorama==0.4.6
 frozenlist==1.7.0
 idna==3.10
-multidict==6.5.1
+multidict==6.6.2
 mypy-extensions==1.1.0
 packaging==25.0
 pathspec==0.12.1

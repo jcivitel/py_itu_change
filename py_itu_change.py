@@ -4,8 +4,11 @@ import sys
 from datetime import datetime
 
 import aiohttp
+import requests
 from bs4 import BeautifulSoup
 from tabulate import tabulate
+
+from pdf_mobileband_tools import extract_text_from_pdf, summarize_mobile_bands
 
 
 def progress_bar(iteration, total):
@@ -81,7 +84,8 @@ async def main():
     :return: True
     """
     if len(sys.argv) <= 1:
-        print("Please add the filter-date as param")
+        print("Please add the filter-date as the first argument")
+        print("the argument should be the date in `YYYY-MM-DD` format")
         return
 
     filter_date = sys.argv[1]
@@ -128,6 +132,48 @@ async def main():
         )
 
     print(f"\n\033[93m{country_updated} countries have new updates")
+
+    def find_english_pdf_url(country_page_url):
+        try:
+            resp = requests.get(country_page_url, timeout=30)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            # Suche nach Tabellen auf der Seite
+            for table in soup.find_all('table'):
+                for row in table.find_all('tr'):
+                    cells = row.find_all(['td', 'th'])
+                    if not cells:
+                        continue
+                    # Suche nach einer Zelle mit 'English' (case-insensitive)
+                    for cell in cells:
+                        if 'english' in cell.get_text(strip=True).lower():
+                            # Suche nach PDF-Link in dieser Zeile
+                            for a in row.find_all('a', href=True):
+                                href = a['href']
+                                if href.lower().endswith('.pdf'):
+                                    if href.startswith('http'):
+                                        return href
+                                    else:
+                                        return requests.compat.urljoin(country_page_url, href)
+            return None
+        except Exception as e:
+            print(f"Fehler beim Finden des PDF-Links: {e}")
+            return None
+
+    print("\n--- Mobilfunkgassen-Zusammenfassung pro Land ---\n")
+    for country, date, url in data_list:
+        print(f"Suche PDF für {country} ({url}) ...")
+        pdf_url = find_english_pdf_url(url)
+        if pdf_url:
+            print(f"Gefundenes PDF: {pdf_url}")
+            text = extract_text_from_pdf(pdf_url)
+            if text:
+                summary = summarize_mobile_bands(text)
+                print(f"{country} ({date}):\n{summary}\n{'-' * 40}")
+            else:
+                print(f"Konnte PDF für {country} nicht extrahieren.")
+        else:
+            print(f"Kein englisches PDF für {country} gefunden.")
 
 
 """

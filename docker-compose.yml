@@ -1,0 +1,19 @@
+services:
+  itu_change:
+    image: jcivitell/itu_change
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      tags:
+      - "jcivitell/itu_change:${CIRCLE_TAG:-notag}"
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_MODELS=llama2
+
+volumes:
+  ollama_data:

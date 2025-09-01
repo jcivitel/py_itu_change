@@ -1,0 +1,12 @@
+venv
+README.md
+.idea
+.env
+.github
+.git
+.gitignore
+.circleci
+.dockerignore
+Dockerfile
+docker-compose.yml
+Jenkinsfile

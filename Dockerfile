@@ -21,6 +21,6 @@ RUN pip install --no-cache-dir -r /opt/py_itu_change/requirements.txt
 
 FROM install
 
-ENV FILTER_DATE="2025-01-01"
+ENV FILTER_DATE="2025-08-01"
 
 CMD ["sh", "-c", "python py_itu_change.py $FILTER_DATE"]

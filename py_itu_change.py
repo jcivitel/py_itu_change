@@ -6,9 +6,10 @@ from datetime import datetime
 import aiohttp
 import requests
 from bs4 import BeautifulSoup
+from langchain_community.llms import Ollama
 from tabulate import tabulate
 
-from pdf_mobileband_tools import extract_text_from_pdf, summarize_mobile_bands
+from pdf_mobileband_tools import extract_text_from_pdf
 
 
 def progress_bar(iteration, total):
@@ -77,6 +78,20 @@ async def process_country(session, value, filter_date):
     return None
 
 
+def extract_and_summarize_mobile_bands_llm(text: str, llm) -> str:
+    """
+    Extrahiert Mobilfunk-Gassen aus dem Text und fasst sie zusammen, Entscheidung durch Ollama.
+    """
+    prompt = (
+        "Fasse alle Mobilfunk-Gassen aus folgendem Text zusammen. Überall wo 'mobile','cellular' oder 'non-fixed' vorkommt, "
+        "ist es relevant die Nummern zu extrahieren."
+        "Antworte als Liste.\n\n"
+        f"Text:\n{text}\n"
+    )
+    response = llm.invoke(prompt)
+    return response.strip()
+
+
 async def main():
     """
     :description: The Main function of the program
@@ -84,7 +99,6 @@ async def main():
     :return: True
     """
     if len(sys.argv) <= 1:
-        print("Please add the filter-date as the first argument")
         print("the argument should be the date in `YYYY-MM-DD` format")
         return
 
@@ -99,14 +113,18 @@ async def main():
         )
 
         tasks = []
-        for option in dropdown.find_all("option"):
-            value = option.get("value")
-            if value:
-                tasks.append(process_country(session, value, filter_date))
+        if dropdown:
+            for option in dropdown.find_all("option"):
+                value = option.get("value")
+                if value:
+                    tasks.append(process_country(session, value, filter_date))
 
         total_tasks = len(tasks)
         completed_tasks = 0
-
+        if total_tasks == 0:
+            print(
+                "Keine Länder gefunden oder keine Aufgaben zu erledigen. Prüfe die Quellseite oder die Filterbedingungen.")
+            return
         progress_bar(completed_tasks, total_tasks)
 
         results = []
@@ -114,17 +132,13 @@ async def main():
             result = await task
             if result:
                 results.append(result)
-                print(f"\33[2K\rCountry: {result[0]}, Update Date: {result[1]}")
-
             completed_tasks += 1
             progress_bar(completed_tasks, total_tasks)
-
         data_list = [result for result in results if result]
         data_list.sort(key=lambda x: x[1])
 
     country_updated = len(data_list)
     sys.stdout.write("\n")
-    """print the result list"""
     if len(data_list) >= 2:
         print("\n\n")
         print(
@@ -138,16 +152,13 @@ async def main():
             resp = requests.get(country_page_url, timeout=30)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, 'html.parser')
-            # Suche nach Tabellen auf der Seite
             for table in soup.find_all('table'):
                 for row in table.find_all('tr'):
                     cells = row.find_all(['td', 'th'])
                     if not cells:
                         continue
-                    # Suche nach einer Zelle mit 'English' (case-insensitive)
                     for cell in cells:
                         if 'english' in cell.get_text(strip=True).lower():
-                            # Suche nach PDF-Link in dieser Zeile
                             for a in row.find_all('a', href=True):
                                 href = a['href']
                                 if href.lower().endswith('.pdf'):
@@ -160,6 +171,9 @@ async def main():
             print(f"Fehler beim Finden des PDF-Links: {e}")
             return None
 
+    # Initialisiere Ollama LLM für Klassifikation
+    llm = Ollama(model="llama2", base_url="http://ollama:11434")
+
     print("\n--- Mobilfunkgassen-Zusammenfassung pro Land ---\n")
     for country, date, url in data_list:
         print(f"Suche PDF für {country} ({url}) ...")
@@ -168,7 +182,7 @@ async def main():
             print(f"Gefundenes PDF: {pdf_url}")
             text = extract_text_from_pdf(pdf_url)
             if text:
-                summary = summarize_mobile_bands(text)
+                summary = extract_and_summarize_mobile_bands_llm(text, llm)
                 print(f"{country} ({date}):\n{summary}\n{'-' * 40}")
             else:
                 print(f"Konnte PDF für {country} nicht extrahieren.")
@@ -176,8 +190,5 @@ async def main():
             print(f"Kein englisches PDF für {country} gefunden.")
 
 
-"""
-check if to call the main function
-"""
 if __name__ == "__main__":
     asyncio.run(main())

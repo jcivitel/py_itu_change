@@ -2,7 +2,7 @@ aiohappyeyeballs==2.6.1
 aiohttp==3.13.2
 aiosignal==1.4.0
 attrs==25.4.0
-beautifulsoup4==4.14.2
+beautifulsoup4==4.14.3
 black==25.11.0
 bs4==0.0.2
 certifi==2025.11.12

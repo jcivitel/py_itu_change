@@ -5,7 +5,7 @@ attrs==26.1.0
 beautifulsoup4==4.14.3
 black==26.5.0
 bs4==0.0.2
-certifi==2026.4.22
+certifi==2026.5.20
 charset-normalizer==3.4.7
 click==8.4.0
 colorama==0.4.6

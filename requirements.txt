@@ -15,7 +15,7 @@ multidict==7.1.0
 mypy-extensions==1.1.0
 packaging==26.3
 pathspec==1.1.1
-platformdirs==4.13.3
+platformdirs==4.13.5
 requests==2.34.2
 soupsieve==3.0.3
 tabulate==0.10.0
